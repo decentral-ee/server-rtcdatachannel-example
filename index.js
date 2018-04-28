@@ -38,7 +38,9 @@ function handleError(error) {
 }
 
 app.post('/channels', (req, res) => {
-    let pc1 = new RTCPeerConnection();
+    let pc1 = new RTCPeerConnection({
+        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+    });
     let channelId = makeid();
     let channel = channels[channelId] = {
         id: channelId,
@@ -147,15 +149,15 @@ app.post('/channels/:channelId/answer', (req, res) => {
     }
 
     // ignore remote ice candidates
-    /*function addIceCandidates(iceCandidates) {
+    function addIceCandidates(iceCandidates) {
         for (let i in iceCandidates) {
             let iceCandidate = iceCandidates[i].candidate;
             console.log(`${channel.id} pc1: adding ice candidate`, JSON.stringify(iceCandidate));
         }
-    }*/
+    }
 
     setRemoteDescription1(req.body.answer);
-    //addIceCandidates(req.body.ice_candidates);
+    addIceCandidates(req.body.ice_candidates);
 });
 
 app.post('/channels/:channelId/close', (req, res) => {

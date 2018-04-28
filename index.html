@@ -12,11 +12,12 @@
             var iceCandidateDeferred;
 
             function connect() {
-                pc2 = new RTCPeerConnection();
+                pc2 = new RTCPeerConnection({
+                    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+		});
                 iceCandidates = [];
                 iceCandidateDeferred = $.Deferred();
 
-                /** ignore remote ice candidates
                 pc2.onicecandidate = function(candidate) {
                     if (!candidate.candidate) {
                         iceCandidateDeferred.resolve();
@@ -28,8 +29,7 @@
                         console.log(`${channelData.channel_id} pc2.onicecandidate`, JSON.stringify(iceCandidate));
                         iceCandidates.push(iceCandidate);
                     }
-                };*/
-                iceCandidateDeferred.resolve();
+                };
 
                 var checks = 0;
                 var expected = 10;
